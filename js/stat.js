@@ -10,6 +10,7 @@ var TEXT_GAP = 20;
 var BAR_PADDING = 50;
 var BAR_HEIGHT = 150;
 var BAR_WIDTH = 40;
+var MAX_NUMBER = 100;
 
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -28,9 +29,8 @@ var getMaxElement = function (arr) {
 };
 
 
-var getRandomInteger = function () {
-  var MAX_NUMBER = 100;
-  return Math.floor(Math.random() * MAX_NUMBER);
+var getRandomInteger = function (number) {
+  return Math.floor(Math.random() * number + 1);
 };
 
 window.renderStatistics = function (ctx, players, times) {
@@ -42,14 +42,14 @@ window.renderStatistics = function (ctx, players, times) {
   ctx.fillText('Ура вы победили!', CLOUD_X + TEXT_GAP, CLOUD_Y + TEXT_GAP);
   ctx.fillText('Список результатов:', CLOUD_X + TEXT_GAP, FONT_GAP + TEXT_GAP * 2);
 
-  ctx.fillStyle = '#000';
-
   var maxTime = getMaxElement(times);
   for (var i = 0; i < players.length; i++) {
+    var POSITION_X = GAP + TEXT_GAP + CLOUD_X + (BAR_WIDTH + BAR_PADDING) * i;
+    var PLAYER_BAR_HEIGHT = (BAR_HEIGHT * times[i]) / maxTime;
     ctx.fillStyle = '#000';
-    ctx.fillText(players[i], GAP + TEXT_GAP + CLOUD_X + (BAR_WIDTH + BAR_PADDING) * i, (TEXT_GAP + FONT_GAP) * 3 + BAR_HEIGHT);
-    ctx.fillText(Math.round(times[i]), GAP + TEXT_GAP + CLOUD_X + (BAR_WIDTH + BAR_PADDING) * i, CLOUD_HEIGHT - TEXT_GAP - FONT_GAP - ((BAR_HEIGHT * times[i]) / maxTime));
-    ctx.fillStyle = (players[i] === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'hsl(240,' + getRandomInteger() + '%, 50%)';
-    ctx.fillRect((GAP + CLOUD_X + TEXT_GAP + (BAR_WIDTH + BAR_PADDING) * i), CLOUD_HEIGHT - TEXT_GAP - ((BAR_HEIGHT * times[i]) / maxTime), BAR_WIDTH, (BAR_HEIGHT * times[i]) / maxTime);
+    ctx.fillText(players[i], POSITION_X, (TEXT_GAP + FONT_GAP) * 3 + BAR_HEIGHT);
+    ctx.fillText(Math.round(times[i]), POSITION_X, CLOUD_HEIGHT - TEXT_GAP - FONT_GAP - PLAYER_BAR_HEIGHT);
+    ctx.fillStyle = (players[i] === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'hsl(240,' + getRandomInteger(MAX_NUMBER) + '%, 50%)';
+    ctx.fillRect(POSITION_X, CLOUD_HEIGHT - TEXT_GAP - PLAYER_BAR_HEIGHT, BAR_WIDTH, PLAYER_BAR_HEIGHT);
   }
 };
